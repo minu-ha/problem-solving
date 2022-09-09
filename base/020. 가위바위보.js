@@ -1,9 +1,16 @@
 const solution = (params) => {
 
     let answer = "";
+
     const {A, B} = params
 
-    A.map((value, index) => console.log(B[index]))
+    A.map((value, index) => {
+        if (value === B[index]) answer += "D"
+        else if (value === 1 && B[index] === 3) answer += "A"
+        else if (value === 2 && B[index] === 1) answer += "A"
+        else if (value === 3 && B[index] === 2) answer += "A"
+        else answer += "B"
+    })
 
     return answer;
 }
