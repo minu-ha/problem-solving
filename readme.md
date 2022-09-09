@@ -1,169 +1,143 @@
-This is an H1
+브라우저 동작 원리
 =============
-Save
-This is an H1
-작은제목: 문서 부제목
 
-This is an H2
--------------
-Save
-This is an H2
-글머리: 1~6까지만 지원
+### 브라우저
 
-# This is a H1
+클라이언트가 접속하고자 하는 웹페이지를 주소에 입력하면, DNS 서버에 접속하려는 주소의 IP 주소를 요청하고
+DNS 서버에서 IP 주소를 알려준 뒤 접속하게된다.
 
-## This is a H2
+브라우저는 서버로부터 HTML,CSS,JS 파일 등등을 받고, HTML, CSS를 파싱한 후 DOM,CSSOM으로 변환 된 후 렌더
+트리로 결합한다. 브라우저는 이를 기반으로 웹페이지를 표시한다.
 
-### This is a H3
+### 자바스크립트
 
-#### This is a H4
+JS의 경우, 렌더링 엔진이 아닌 자바스크립트 엔진이 처리하고, HTML 파서가 스크립트를 만나면 DOM 생성을 중지하고
+자바스크립트 엔진은 스크립트 파일을 로드하고 파싱하여 실행한다. 과정이 끝나면 HTML 파서는 DOM 생성을 재개한다.
 
-##### This is a H5
+BODY 요소의 가장 아래에 스크립트를 위치시키는 이유로는 HTML이 로딩되기 전에 자바스크립트가 DOM을 조작하는 경우
+에러가 날 수 있고, DOM을 생성하는 도중 자바스크립트 로딩으로 인하여 페이지 로딩이 길어질 수 있기 떄문이다.
 
-###### This is a H6
+### VAR 변수의 문제점
 
-1. 첫번째
-2. 두번째
-3. 세번째
+키워드의 생략을 허용하고, 중복 선언이 가능하며, 호이스팅으로 인하여 선언하기 전에 참조가 가능하다,
+함수레벨 스코프기 때문에 전역에서 참조 할 수 있다.
 
-* 빨강
-    * 녹색
-        * 파랑
+### 스코프
 
-2.4.1. 들여쓰기
+```js
+var x = 'global'
 
-    This is a code block.
-
-2.4.1. 코드블럭
-코드블럭은 다음과 같이 2가지 방식을 사용할 수 있습니다:
-
-코드블럭코드("```") 을 이용하는 방법
-
-```java
-public class BootSpringBootApplication {
-  public static void main(String[] args) {
-    System.out.println("Hello, Honeymon");
-  }
+function foo() {
+    var x = 'function scope';
+    console.log(x);
 }
+
+foo();
+console.log(x);
 ```
 
-Save
-public class BootSpringBootApplication {
-public static void main(String[] args) {
-System.out.println("Hello, Honeymon");
+스코프란 참조 대상 식별자를 찾아내기 위한 규칙이다.   
+전역에 선언된 x는 어디에서든 참조가 가능하지만 함수 foo에 선언된 x는 함수 내부에서만 참조 할 수 있다.
+
+스코프는 전역 스코프와 지역 스코프로 구분되며. 변수의 관점에서는 전역변수와 지역변수로 부를 수 있다.   
+선언 위치에 따라 스코프에 차이가 있다.
+
+```js
+var x = 0;
+{
+    var x = 1;
+    console.log(x); // 1
 }
+console.log(x);   // 1
+
+let y = 0;
+{
+    let y = 1;
+    console.log(y); // 1
 }
-Save
-2.5. 수평선 <hr/>
-아래 줄은 모두 수평선을 만든다. 마크다운 문서를 미리보기로 출력할 때 페이지 나누기 용도로 많이 사용한다.
+console.log(y);   // 0
+```
 
-* * *
+자바스크립트는 함수레벨 스코프를 사용하는 언어이기 떄문에 블록내에서 선언된 변수라도 같은 함수 내에
+위치하고있으면 참조가 가능하다. 변수명이 중복된 경우 지역변수를 우선하여 참조한다.
 
-***
+```js
+var x = 'global';
 
-*****
+function foo() {
+    var x = 'local';
+    console.log(x);
 
-- - -
+    function bar() {  // 내부함수
+        console.log(x); // ?
+    }
 
----------------------------------------
-Save
-적용예
-2.6. 링크
-참조링크
-[link keyword][id]
+    bar();
+}
 
-[id]: URL "Optional Title here"
+foo();
+console.log(x); // ?
+```
 
-// code
-Link: [Google][googlelink]
+내부함수는 자신을 포함하고 있는 외부함수의 변수에 접근 할 수 있다. 실행 컨텍스트의 스코프 체인에 의해
+전역변수 x가 뒤로 밀려났기 때문이다.
 
-[googlelink]: https://google.com "Go google"
-Save
-Link: Google
+```js
+var x = 1;
 
-외부링크
-사용문법: [Title](link)
-적용예: [Google](https://google.com, "google link")
-Save
-Link: Google
+function foo() {
+    var x = 10;
+    bar();
+}
 
-자동연결
-일반적인 URL 혹은 이메일주소인 경우 적절한 형식으로 링크를 형성한다.
+function bar() {
+    console.log(x);
+}
 
-* 외부링크: <http://example.com/>
-* 이메일링크: <address@example.com>
-  Save
-  외부링크: http://example.com/
-  이메일링크: address@example.com
-  2.7. 강조
-  *single asterisks*
-  _single underscores_
-  **double asterisks**
-  __double underscores__
-  ~~cancelline~~
-  Save
-  single asterisks
-  single underscores
-  double asterisks
-  double underscores
-  cancelline
-  문장 중간에 사용할 경우에는 **띄어쓰기** 를 사용하는 것이 좋다.
-  문장 중간에 사용할 경우에는 띄어쓰기를 사용하는 것이 좋다.
+foo(); // ?
+bar(); // ?
+```
 
-2.8. 이미지
-![Alt text](/path/to/img.jpg)
-![Alt text](/path/to/img.jpg "Optional title")
-Save
-석촌호수 러버덕 석촌호수 러버덕
+자바스크립트는 함수를 호출한 시점이 아닌 선언한 시점에서 상위 스코프가 결정되는 렉시컬 스코프를 따른다.
 
-사이즈 조절 기능은 없기 때문에 <img width="" height=""></img>를 이용한다.
+### THIS
 
-예
+자바스크립트는 함수 호출 방식에 의해 this에 바인딩할 객체가 동적으로 결정된다.
 
-<img src="/path/to/img.jpg" width="450px" height="300px" title="px(픽셀) 크기 설정" alt="RubberDuck"></img><br/>
-<img src="/path/to/img.jpg" width="40%" height="30%" title="px(픽셀) 크기 설정" alt="RubberDuck"></img>
-Save
-RubberDuck
-RubberDuck
+* 함수 호출
+* 메소드 호출
+* 생성자 함수 호출
+* apply / call / bind gㅗ출
 
-2.9. 줄바꿈
-3칸 이상 띄어쓰기( )를 하면 줄이 바뀐다.
+기본적으로 this는 전역객체에 바인딩된다. 전역함수 & 내부함수 & 콜백함수에서도 차이는 없다.
 
-* 줄 바꿈을 하기 위해서는 문장 마지막에서 3칸이상을 띄어쓰기해야 한다.
-  이렇게
+```js
+var obj1 = {
+    name: 'Lee',
+    sayName: function () {
+        console.log(this.name);
+    }
+}
 
-* 줄 바꿈을 하기 위해서는 문장 마지막에서 3칸이상을 띄어쓰기해야 한다.___\\ 띄어쓰기
-  이렇게
-  Save
-  줄 바꿈을 하기 위해서는 문장 마지막에서 3칸이상을 띄어쓰기해야 한다. 이렇게
+var obj2 = {
+    name: 'Kim'
+}
 
-줄 바꿈을 하기 위해서는 문장 마지막에서 3칸이상을 띄어쓰기해야 한다.
-이렇게
+obj2.sayName = obj1.sayName;
 
-3. 마크다운 사용기
-   3.1. 위지윅(WSYWIG) 에디터
-   우리가 흔하게 접하는 웹에서 사용되는 에디터(네이버, 다음, 구글 등)이 대부분 위지윅 에디터에 속하며 기본적으로 HTML을 이용하여
-   스타일을 적용하여 문장을 꾸미는 형태를 취하게 된다. 그래서 하루패드와 같은 마크다운 에디터의 View 영역의 내용을 복사하여 붙여넣기를
-   하면 대체적으로 View영역에서 보이는 그대로 복사되는 편이다. 다만, 붙여넣기 이후에 문장들을 수정하려고 할 떄 문제가 되는데, 이는
-   스타일이 포함된 태그가 수정과정에서 변형되면서 전체적인 영향을 끼치는 탓이다. 티스토리 블로그에서는 쉽지 않고... 워드프레스의 경우에는
-   마크다운으로 작성된 포스트를 HTML로 변환해주는 기능을 활용하는 것이 좋다. 결론은, 복사해서 붙여넣기하면 가급적이면 본문은 수정하지
-   않는 것이 좋다.
+obj1.sayName();
+obj2.sayName();
+```
 
-3.2. 깃헙Github, 비트버킷Bitbucket과 요비Yobi 등
-최근 유행하는 협업개발플랫폼의 경우에는 마크다운을 변환하는 컨버터 기능을 기본탑재하고 있기 때문에 마크다운 문법으로 작성한 텍스트를 그대로
-복사해서 붙여넣거나 업로드하는 것만으로 마크다운의 적용이 가능하다.
+함수가 객체의 프로퍼티면 메소드로 호출된다. 메소드 내부의 this는 메소드를 호출한 객체에 바인딩된다.
 
-3.3. MS워드 적용
-View 영역의 항목을 그대로 붙여넣거나 HTML 내보내기 등으로 생성한 파일을 불러오는 형태로 사용가능하다. 적용한 헤더를 워드가 읽어드리면서
-목차에 적용하기 때문에 이를 활용하면 목차까지도 손쉽게 적용이 가능해진다.
+### 실행 컨텍스트
 
-4. 정리
-   마크다운은 기본문법만 알고있다면 일반 텍스트편집기에서도 손쉽게 작성이 가능한 마크업언어다. 현재 다양한 도구와 플랫폼에서 지원하고 있기
-   때문에 더욱 손쉽게 스타일적용된 문서를 작성할 수 있어 점점 널리 사용되고 있다.
+실행 컨텍스트는 실행 가능한 코드를 형상화하고 객체의 형태를 가지고있으며, Value Object, Scope Chain, This
+를 갖고있다.
 
-마크다운을 이해하고 사용하면서 쉽고 빠르게 스타일문서를 작성해보세요.
+### 클로저
 
-저는 Dropbox 프로를 구매해서 집-랩탑-스마트폰이 각각 연동을 시켜서 사용하고 있습니다. 드랍박스에 저장된 마크다운 문서는 Dropbox
-웹서비스 상에서 제공하기 때문에 웹상에서 바로 열람할 수도 있어 링크를 걸어서 다른 사람과 공유하는 형식으로 사용하고 있다.
-
-링크 예: Markdown 설명
+클로저란 함수와 그 함수가 선언됐을 때의 렉시컬 환경과의 조합.
+자신을 포함하고있는 외부함수보다 내부함수가 더 오래 유지되는 경우, 외부함수 밖에서 내부함수가 호출되더라도
+외부함수의 지역변수에 접근 할 수 있다. 자신이 생성될 때의 환경을 기억하는 함수.
