@@ -104,6 +104,8 @@ dom-contents loaded 발생함
 
 함수형은 - 훅을 사용해서 쉽게 간섭할수잇음
 
+123
+
 ueseefect - 리액트의
 
 usestate - 리액트 상태관리하는 훅 -
