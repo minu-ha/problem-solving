@@ -86,6 +86,8 @@ number , string , undefined, null , boolean , symbol / object
 
 슈가코드
 
+avc
+
 함수랑 클래스 차이 외워가기 - 123
 
 한줄짜린 블록선언안해도리턴가능
