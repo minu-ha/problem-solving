@@ -1,20 +1,26 @@
-function solution(n, words) {
-    let answer = [0, 0];
-    let spliceWords = [];
+function solution(strs, t) {
+
+    const n = t.length;
+    const dp = new Array(n).fill(Infinity);
 
     for (let i = 0; i < n; i++) {
-        spliceWords.push(words.splice(0, n))
-    }
+        const current = t.substr(0, i + 1);
 
-    console.log(spliceWords)
+        for (const str of strs) {
+            if (current.endsWith(str)) {
+                const diff = current.length - str.length;
 
-    for (let i = 0; i < n; i++) {
-        if (spliceWords[i][i].slice(-1) === spliceWords[i][i + 1].slice(0, 1)) {
-            console.log("123")
+                if (diff === 0) {
+                    dp[i] = 1;
+                }
+                else {
+                    dp[i] = Math.min(dp[i], dp[diff - 1] + 1);
+                }
+            }
         }
     }
 
-    return answer;
+    return dp[n - 1] === Infinity ? -1 : dp[n - 1];
 }
 
-console.log(solution(3, ["tank", "kick", "know", "wheel", "land", "dream", "mother", "robot", "tank"]));
+console.log(solution(["app", "ap", "p", "l", "e", "ple", "pp"], 'apple'));
